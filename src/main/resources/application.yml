@@ -1,0 +1,27 @@
+micronaut:
+  application:
+    name: internalad-search-api
+  metrics:
+    enabled: true
+    sensitive: false
+    binders:
+      jvm:
+        enabled: true
+    export:
+      prometheus:
+        enabled: true
+        descriptions: false
+  server:
+    cors:
+      enabled: true
+      configurations:
+        web:
+          maxAge: 4000
+    port: 9027
+endpoints:
+  metrics:
+    enabled: true
+  prometheus:
+    sensitive: false
+elasticsearch:
+  url: ${elastic.url:`http://localhost:9200`}

@@ -1,0 +1,44 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - name: build and test
+        run: ./gradlew test build
+      - name: build docker image
+        run: |
+          echo docker.pkg.github.com/$GITHUB_REPOSITORY/pam-internal-search-api > .docker_image
+          echo $(echo $GITHUB_SHA | cut -c1-7) > .docker_tag
+          docker build . --pull -t $(cat .docker_image):$(cat .docker_tag)
+      - name: push docker image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin docker.pkg.github.com
+          docker push $(cat .docker_image):$(cat .docker_tag)
+      - name: deploy to dev-sbs
+        uses: navikt/deployment-cli/action@0.4.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWAIT_SECONDS: 0
+        with:
+          cluster: dev-sbs
+          team: teampam
+          resources: nais-preprod.yml
+      - name: deploy to prod-sbs
+        uses: navikt/deployment-cli/action@0.4.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWAIT_SECONDS: 0
+        with:
+          cluster: prod-sbs
+          team: teampam
+          resources: nais.yml
