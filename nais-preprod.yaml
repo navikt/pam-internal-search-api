@@ -6,7 +6,7 @@ metadata:
   labels:
     team: teampam
 spec:
-  image: {{ image }}:{{ tag }}
+  image: {{ image }}
   port: 9027
   replicas:
     min: 2
