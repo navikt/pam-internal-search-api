@@ -22,9 +22,6 @@ dependencies {
     kapt "io.micronaut:micronaut-inject-java"
     kapt "io.micronaut:micronaut-validation"
     kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
-    // implementation "org.springframework.boot:spring-boot-starter-web:2.1.6.RELEASE"
-    // implementation "org.springframework.boot:spring-boot-starter-actuator:2.1.6.RELEASE"
-    // implementation "io.micrometer:micrometer-registry-prometheus:1.1.5"
     implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:7.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
@@ -32,7 +29,6 @@ dependencies {
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
     runtimeOnly "net.logstash.logback:logstash-logback-encoder:6.2"
     testImplementation "org.assertj:assertj-core:3.11.1"
-    testImplementation "org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE"
     implementation "io.micronaut.configuration:micronaut-micrometer-core:$micronautMicrometerVersion"
     implementation "io.micronaut.configuration:micronaut-micrometer-registry-prometheus:$micronautMicrometerVersion"
     implementation "io.micronaut:micronaut-management:$micronautVersion"

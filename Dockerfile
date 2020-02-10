@@ -1,3 +1,3 @@
 FROM navikt/java:12
-COPY target/pam-internal-search-api-*.jar /app/app.jar
+COPY build/libs/pam-internal-search-api-*.jar /app/app.jar
 EXPOSE 9027
