@@ -47,5 +47,5 @@ jobs:
         uses: navikt/deployment-cli/action@0.4.1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-sbs
-          RESOURCE: nais-preprod.yaml
+          CLUSTER: prod-sbs
+          RESOURCE: nais.yaml

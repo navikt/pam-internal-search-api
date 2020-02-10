@@ -16,10 +16,10 @@ spec:
     enabled: true
     path: /prometheus
   liveness:
-    initialDelay: 60
+    initialDelay: 5
     path: /isAlive
   readiness:
-    initialDelay: 60
+    initialDelay: 5
     path: /isReady
   resources:
     limits:
