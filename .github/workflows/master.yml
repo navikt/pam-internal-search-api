@@ -3,7 +3,12 @@ on:
   push:
     branches:
       - master
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/pam-internal-search-api:${{ github.sha }}
+
 jobs:
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -16,29 +21,31 @@ jobs:
       - name: build docker image
         run: |
           echo docker.pkg.github.com/$GITHUB_REPOSITORY/pam-internal-search-api > .docker_image
-          echo $(echo $GITHUB_SHA | cut -c1-7) > .docker_tag
-          docker build . --pull -t $(cat .docker_image):$(cat .docker_tag)
+          docker build . --pull -t ${IMAGE}
       - name: push docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin docker.pkg.github.com
-          docker push $(cat .docker_image):$(cat .docker_tag)
+          docker push ${IMAGE}
+
+  deploy:
+    name: deploy to NAIS
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
       - name: deploy to dev-sbs
-        uses: navikt/deployment-cli/action@0.4.1
+        uses: nais/deploy/actions/deploy@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AWAIT_SECONDS: 0
-        with:
-          cluster: dev-sbs
-          team: teampam
-          resources: nais-preprod.yml
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-sbs
+          WAIT: true
+          RESOURCE: nais-preprod.yml
       - name: deploy to prod-sbs
         uses: navikt/deployment-cli/action@0.4.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AWAIT_SECONDS: 0
-        with:
-          cluster: prod-sbs
-          team: teampam
-          resources: nais.yml
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-sbs
+          RESOURCE: nais-preprod.yml
