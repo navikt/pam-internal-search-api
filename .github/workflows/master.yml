@@ -48,4 +48,5 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-sbs
+          WAIT: true
           RESOURCE: nais.yaml
