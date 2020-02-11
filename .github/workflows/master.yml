@@ -44,9 +44,8 @@ jobs:
           WAIT: true
           RESOURCE: nais-preprod.yaml
       - name: deploy to prod-sbs
-        uses: navikt/deployment-cli/action@0.4.1
+        uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-sbs
-          WAIT: true
           RESOURCE: nais.yaml
