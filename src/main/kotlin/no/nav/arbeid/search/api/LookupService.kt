@@ -16,7 +16,15 @@ class LookupService(private val searchClient: SearchClient) {
             "_source_exclude",
             "_source_includes",
             "_source_excludes",
-            "filter_path")
+            "filter_path",
+            "typed_keys",
+            "ignore_unavailable",
+            "expand_wildcards",
+            "allow_no_indices",
+            "ignore_throttled",
+            "search_type",
+            "batched_reduce_size",
+            "ccs_minimize_roundtrips")
 
     private fun onlyAllowedParams(params: Map<String, *>) = allowedRequestParams.containsAll(params.keys)
 
