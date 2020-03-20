@@ -18,7 +18,8 @@ class SearchController constructor(private val searchService: SearchService, pri
     fun searchAdWithQuery(params: HttpParameters) = cachableResponse(searchService.searchWithQuery(params.asMap()))
 
     @Get(uris = ["internalad/ad/{uuid}", "internalad/ad/{uuid}/_source",
-        "eures/internalad/ad/{uuid}", "eures/internalad/ad/{uuid}/_source"])
+        "eures/internalad/ad/{uuid}", "eures/internalad/ad/{uuid}/_source",
+        "/stillingsok/ad/{uuid}", "/stillingsok/ad/{uuid}/_source"])
     fun lookupAd(@PathVariable("uuid") uuid: String,
                  request: HttpRequest<*>): HttpResponse<String> {
 
