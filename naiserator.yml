@@ -37,7 +37,7 @@ spec:
   {{/each}}
   env:
     - name: ELASTIC_URL
-      value: https://stilling-opendistro-elasticsearch.teampam.svc.cluster.local:9200
+      value: http://stilling-opendistro-elasticsearch:9200
   accessPolicy:
     outbound:
       rules:
