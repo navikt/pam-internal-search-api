@@ -1,12 +1,13 @@
 package no.nav.arbeid.search.api
 
-import io.micronaut.context.annotation.Bean
-import io.micronaut.context.annotation.Configuration
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
 import org.apache.http.HttpHost
+import org.apache.http.auth.AuthScope
+import org.apache.http.auth.UsernamePasswordCredentials
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.conn.ssl.DefaultHostnameVerifier
+import org.apache.http.impl.client.BasicCredentialsProvider
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder
@@ -17,7 +18,13 @@ import javax.inject.Singleton
 class AppConfig()  {
 
     @Singleton
-    fun safeElasticClientBuilder(@Value("\${elasticsearch.url}") elasticsearchUrl: URL? = null): RestClientBuilder {
+    fun safeElasticClientBuilder(@Value("\${elasticsearch.url}") elasticsearchUrl: URL? = null,
+                                 @Value("\${elasticsearch.user:foo}") user: String,
+                                 @Value("\${elasticsearch.password:bar}") password: String): RestClientBuilder {
+        val credentialsProvider = BasicCredentialsProvider().apply {
+            setCredentials(AuthScope.ANY, UsernamePasswordCredentials(user, password))
+        }
+
         return RestClient.builder(HttpHost.create(elasticsearchUrl.toString()))
                 .setRequestConfigCallback { requestConfigBuilder: RequestConfig.Builder ->
                     requestConfigBuilder
@@ -30,6 +37,7 @@ class AppConfig()  {
                             .setSSLHostnameVerifier(DefaultHostnameVerifier())
                             .setMaxConnTotal(256)
                             .setMaxConnPerRoute(256)
+                            .setDefaultCredentialsProvider(credentialsProvider)
                 }
     }
 }
