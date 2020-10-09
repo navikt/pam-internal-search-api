@@ -45,4 +45,4 @@ spec:
     inbound:
       rules:
         - application: stilling-opendistro-elasticsearch
-
+        - application: pam-eures-stilling-eksport
