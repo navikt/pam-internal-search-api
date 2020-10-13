@@ -1,0 +1,51 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: pam-internal-search-api
+  namespace: teampam
+  labels:
+    team: teampam
+spec:
+  image: {{ image }}
+  port: 9027
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 50
+  prometheus:
+    enabled: true
+    path: /prometheus
+  liveness:
+    initialDelay: 5
+    path: /isAlive
+  readiness:
+    initialDelay: 5
+    path: /isReady
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1000Mi
+    requests:
+      cpu: 500m
+      memory: 500Mi
+  webproxy: false
+  vault:
+    enabled: false
+  filesFrom:
+    - secret: pam-internal-search-api-env-secret
+      mountPath: /var/run/secrets/nais.io/vault
+  ingresses:
+  {{#each ingress as |url|}}
+     - {{url}}
+  {{/each}}
+  env:
+    - name: ELASTIC_URL
+      value: http://stilling-opendistro-elasticsearch:9200
+  accessPolicy:
+    outbound:
+      rules:
+        - application: stilling-opendistro-elasticsearch
+    inbound:
+      rules:
+        - application: stilling-opendistro-elasticsearch
+        - application: pam-eures-stilling-eksport
