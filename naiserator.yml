@@ -49,3 +49,4 @@ spec:
       rules:
         - application: stilling-opendistro-elasticsearch
         - application: pam-eures-stilling-eksport
+        - application: arbeidsplassen-janzztest
