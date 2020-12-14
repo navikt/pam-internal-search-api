@@ -17,10 +17,11 @@ class SearchClient(
         @Value("\${elasticsearch.url}") private val elasticsearchUrl: URL? = null
 ) : RestHighLevelClient(client) {
 
-    private val index = "internalad"
+    private val INTERNALAD = "internalad"
+    private val UNDERENHET = "underenhet"
 
     fun searchWithBody(params: Map<String, MutableList<String>>, body: String?): String {
-        val request = Request("POST", "/$index/_search")
+        val request = Request("POST", "/$INTERNALAD/_search")
         params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
         request.entity = StringEntity(body, ContentType.APPLICATION_JSON)
         val responseEntity = lowLevelClient.performRequest(request).entity
@@ -28,7 +29,15 @@ class SearchClient(
     }
 
     fun searchWithQuery(params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$index/_search")
+        val request = Request("GET", "/$INTERNALAD/_search")
+        params.forEach { (name, value) ->
+            request.addParameter(name, value.joinToString(" ")) }
+        val responseEntity = lowLevelClient.performRequest(request).entity
+        return EntityUtils.toString(responseEntity)
+    }
+
+    fun searchUnderenhet(params: Map<String, MutableList<String>>): String {
+        val request = Request("GET", "/$UNDERENHET/_search")
         params.forEach { (name, value) ->
             request.addParameter(name, value.joinToString(" ")) }
         val responseEntity = lowLevelClient.performRequest(request).entity
@@ -36,7 +45,7 @@ class SearchClient(
     }
 
     fun lookup(documentId: String, onlySource: Boolean, params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$index/_doc/$documentId" + if (onlySource) "/_source" else "")
+        val request = Request("GET", "/$INTERNALAD/_doc/$documentId" + if (onlySource) "/_source" else "")
         params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
         val responseEntity = lowLevelClient.performRequest(request).entity
         return EntityUtils.toString(responseEntity)

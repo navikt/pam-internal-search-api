@@ -30,6 +30,9 @@ class SearchController constructor(private val searchService: SearchService, pri
         return cachableResponse(lookupService.lookup(uuid, onlySource, request.parameters.asMap()))
     }
 
+    @Get(uris = ["/underenhet/_search"])
+    fun searchUnderenhet(params: HttpParameters) = cachableResponse(searchService.searchUnderenhet(params.asMap()))
+
     private fun String.validateUuid() {
 
         require(isNotBlank()) { "Missing or blank id: $this" }

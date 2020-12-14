@@ -28,6 +28,11 @@ class SearchService(private val searchClient: SearchClient) {
         return searchClient.searchWithQuery(params)
     }
 
+    fun searchUnderenhet(params: Map<String, MutableList<String>>): String {
+        require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
+        return searchClient.searchUnderenhet(params)
+    }
+
     private fun onlyAllowedParams(params: Map<String, *>) = ALLOWED_REQUEST_PARAMS.containsAll(params.keys)
 
 }
