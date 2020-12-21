@@ -18,19 +18,14 @@ private val ALLOWED_REQUEST_PARAMS = setOf(
 @Singleton
 class SearchService(private val searchClient: SearchClient) {
 
-    fun searchWithBody(params: Map<String, MutableList<String>>, body: String): String {
+    fun searchWithBody(index: String, params: Map<String, MutableList<String>>, body: String): String {
         require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
-        return searchClient.searchWithBody(params, body)
+        return searchClient.searchWithBody(index, params, body)
     }
 
-    fun searchWithQuery(params: Map<String, MutableList<String>>): String {
+    fun searchWithQuery(index: String, params: Map<String, MutableList<String>>): String {
         require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
-        return searchClient.searchWithQuery(params)
-    }
-
-    fun searchUnderenhet(params: Map<String, MutableList<String>>): String {
-        require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
-        return searchClient.searchUnderenhet(params)
+        return searchClient.searchWithQuery(index, params)
     }
 
     private fun onlyAllowedParams(params: Map<String, *>) = ALLOWED_REQUEST_PARAMS.containsAll(params.keys)
