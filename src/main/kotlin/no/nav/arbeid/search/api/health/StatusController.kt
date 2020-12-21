@@ -3,6 +3,7 @@ package no.nav.arbeid.search.api.health
 import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import no.nav.arbeid.search.api.INTERNALAD
 import no.nav.arbeid.search.api.SearchService
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class StatusController @Inject internal constructor(private val searchService: S
     @Get("/amIOK")
     fun amIOK(): HttpResponse<String> {
         return try {
-            return searchService.searchWithBody(emptyMap(), elasticTestQuery).let { HttpResponse.ok(it) }
+            return searchService.searchWithBody(INTERNALAD,emptyMap(), elasticTestQuery).let { HttpResponse.ok(it) }
         } catch (e: Exception) {
             LOG.error("Got exeption", e)
             HttpResponse.status(HttpStatus.FAILED_DEPENDENCY, "NOTOK")

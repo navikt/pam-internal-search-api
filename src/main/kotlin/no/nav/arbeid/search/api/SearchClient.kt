@@ -17,27 +17,17 @@ class SearchClient(
         @Value("\${elasticsearch.url}") private val elasticsearchUrl: URL? = null
 ) : RestHighLevelClient(client) {
 
-    private val INTERNALAD = "internalad"
-    private val UNDERENHET = "underenhet"
 
-    fun searchWithBody(params: Map<String, MutableList<String>>, body: String?): String {
-        val request = Request("POST", "/$INTERNALAD/_search")
+    fun searchWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
+        val request = Request("POST", "/$index/_search")
         params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
         request.entity = StringEntity(body, ContentType.APPLICATION_JSON)
         val responseEntity = lowLevelClient.performRequest(request).entity
         return EntityUtils.toString(responseEntity)
     }
 
-    fun searchWithQuery(params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$INTERNALAD/_search")
-        params.forEach { (name, value) ->
-            request.addParameter(name, value.joinToString(" ")) }
-        val responseEntity = lowLevelClient.performRequest(request).entity
-        return EntityUtils.toString(responseEntity)
-    }
-
-    fun searchUnderenhet(params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$UNDERENHET/_search")
+    fun searchWithQuery(index: String, params: Map<String, MutableList<String>>): String {
+        val request = Request("GET", "/$index/_search")
         params.forEach { (name, value) ->
             request.addParameter(name, value.joinToString(" ")) }
         val responseEntity = lowLevelClient.performRequest(request).entity
@@ -59,3 +49,6 @@ class SearchClient(
         LOG.info("Using Elasticsearch at {}", elasticsearchUrl)
     }
 }
+
+val INTERNALAD = "internalad"
+val UNDERENHET = "underenhet"

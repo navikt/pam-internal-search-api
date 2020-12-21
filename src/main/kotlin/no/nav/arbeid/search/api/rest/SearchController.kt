@@ -5,17 +5,26 @@ import io.micronaut.http.HttpHeaderValues.CACHE_MAX_AGE
 import io.micronaut.http.HttpHeaderValues.CACHE_PUBLIC
 import io.micronaut.http.HttpHeaders.CACHE_CONTROL
 import io.micronaut.http.annotation.*
+import no.nav.arbeid.search.api.INTERNALAD
 import no.nav.arbeid.search.api.LookupService
 import no.nav.arbeid.search.api.SearchService
+import no.nav.arbeid.search.api.UNDERENHET
 
 @Controller
 class SearchController constructor(private val searchService: SearchService, private val lookupService: LookupService) {
 
     @Post(uris = ["/internalad/_search", "/eures/internalad/_search"])
-    fun searchAdWithBody(params: HttpParameters, @Body body: String) = searchService.searchWithBody(params.asMap(), body)
+    fun searchAdWithBody(params: HttpParameters, @Body body: String) = searchService.searchWithBody(INTERNALAD,params.asMap(), body)
 
     @Get(uris = ["/internalad/_search", "/eures/internalad/_search"])
-    fun searchAdWithQuery(params: HttpParameters) = cachableResponse(searchService.searchWithQuery(params.asMap()))
+    fun searchAdWithQuery(params: HttpParameters) = cachableResponse(searchService.searchWithQuery(INTERNALAD,params.asMap()))
+
+    @Post(uris = ["/underenhet/_search"])
+    fun searchUnderenhetWithBody(params: HttpParameters, @Body body: String) = searchService.searchWithBody(UNDERENHET,params.asMap(), body)
+
+    @Get(uris = ["/underenhet/_search"])
+    fun searchUnderenhetWithQuery(params: HttpParameters) = cachableResponse(searchService.searchWithQuery(UNDERENHET, params.asMap()))
+
 
     @Get(uris = ["internalad/ad/{uuid}", "internalad/ad/{uuid}/_source",
         "eures/internalad/ad/{uuid}", "eures/internalad/ad/{uuid}/_source",
@@ -30,8 +39,7 @@ class SearchController constructor(private val searchService: SearchService, pri
         return cachableResponse(lookupService.lookup(uuid, onlySource, request.parameters.asMap()))
     }
 
-    @Get(uris = ["/underenhet/_search"])
-    fun searchUnderenhet(params: HttpParameters) = cachableResponse(searchService.searchUnderenhet(params.asMap()))
+
 
     private fun String.validateUuid() {
 
