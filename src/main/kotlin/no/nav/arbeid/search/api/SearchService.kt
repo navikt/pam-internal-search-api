@@ -23,9 +23,19 @@ class SearchService(private val searchClient: SearchClient) {
         return searchClient.searchWithBody(index, params, body)
     }
 
+    fun countWithBody(index: String, params: Map<String, MutableList<String>>, body: String): String {
+        require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
+        return searchClient.countWithBody(index, params, body)
+    }
+
     fun searchWithQuery(index: String, params: Map<String, MutableList<String>>): String {
         require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
         return searchClient.searchWithQuery(index, params)
+    }
+
+    fun countWithQuery(index: String, params: Map<String, MutableList<String>>): String {
+        require(onlyAllowedParams(params)) { "Disallowed request params present in " + params.keys }
+        return searchClient.countWithQuery(index, params)
     }
 
     private fun onlyAllowedParams(params: Map<String, *>) = ALLOWED_REQUEST_PARAMS.containsAll(params.keys)

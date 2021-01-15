@@ -16,8 +16,14 @@ class SearchController constructor(private val searchService: SearchService, pri
     @Post(uris = ["/internalad/_search", "/eures/internalad/_search"])
     fun searchAdWithBody(params: HttpParameters, @Body body: String) = searchService.searchWithBody(INTERNALAD,params.asMap(), body)
 
+    @Post(uris = ["/internalad/_count", "/eures/internalad/_count"])
+    fun countAdWithBody(params: HttpParameters, @Body body: String) = searchService.countWithBody(INTERNALAD,params.asMap(), body)
+
     @Get(uris = ["/internalad/_search", "/eures/internalad/_search"])
     fun searchAdWithQuery(params: HttpParameters) = cachableResponse(searchService.searchWithQuery(INTERNALAD,params.asMap()))
+
+    @Get(uris = ["/internalad/_count", "/eures/internalad/_count"])
+    fun countAdWithQuery(params: HttpParameters) = cachableResponse(searchService.countWithQuery(INTERNALAD,params.asMap()))
 
     @Post(uris = ["/underenhet/_search"])
     fun searchUnderenhetWithBody(params: HttpParameters, @Body body: String) = searchService.searchWithBody(UNDERENHET,params.asMap(), body)

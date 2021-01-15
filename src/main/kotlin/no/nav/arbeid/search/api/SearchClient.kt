@@ -20,18 +20,36 @@ class SearchClient(
 
     fun searchWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
         val request = Request("POST", "/$index/_search")
+        return requestWithBody(request, params, body)
+    }
+
+    fun requestWithBody(request: Request, params: Map<String, MutableList<String>>, body: String?): String {
         params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
         request.entity = StringEntity(body, ContentType.APPLICATION_JSON)
         val responseEntity = lowLevelClient.performRequest(request).entity
         return EntityUtils.toString(responseEntity)
     }
 
+    fun countWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
+        val request = Request("POST", "/$index/_count")
+        return requestWithBody(request, params, body)
+    }
+
     fun searchWithQuery(index: String, params: Map<String, MutableList<String>>): String {
         val request = Request("GET", "/$index/_search")
+        return reuqestWithQuery(request, params)
+    }
+
+    private fun reuqestWithQuery(request: Request, params: Map<String, MutableList<String>>) : String {
         params.forEach { (name, value) ->
             request.addParameter(name, value.joinToString(" ")) }
         val responseEntity = lowLevelClient.performRequest(request).entity
         return EntityUtils.toString(responseEntity)
+    }
+
+    fun countWithQuery(index: String, params: Map<String, MutableList<String>>): String {
+        val request = Request("GET", "/$index/_count")
+        return reuqestWithQuery(request, params)
     }
 
     fun lookup(documentId: String, onlySource: Boolean, params: Map<String, MutableList<String>>): String {
