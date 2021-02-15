@@ -40,11 +40,12 @@ spec:
   {{/each}}
   env:
     - name: ELASTIC_URL
-      value: http://stilling-opendistro-elasticsearch:9200
+      value: {{ elastic_url }}
   accessPolicy:
     outbound:
       rules:
         - application: stilling-opendistro-elasticsearch
+        - application: stillinger-opendistro-elasticsearch
     inbound:
       rules:
         - application: stilling-opendistro-elasticsearch

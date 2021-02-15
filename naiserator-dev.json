@@ -1,3 +1,4 @@
 {
-  "ingress": ["https://pam-internal-search-api.dev-gcp.nais.io"]
+  "ingress": ["https://pam-internal-search-api.dev-gcp.nais.io"],
+  "elastic_url": "http://stillinger-opendistro-elasticsearch:9200"
 }
