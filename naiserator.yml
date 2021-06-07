@@ -24,10 +24,10 @@ spec:
   resources:
     limits:
       cpu: 1000m
-      memory: 1000Mi
+      memory: 1280Mi
     requests:
       cpu: 500m
-      memory: 500Mi
+      memory: 200Mi
   webproxy: false
   vault:
     enabled: false
