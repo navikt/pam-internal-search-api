@@ -31,9 +31,6 @@ spec:
   webproxy: false
   vault:
     enabled: false
-  filesFrom:
-    - secret: pam-internal-search-api-env-secret
-      mountPath: /var/run/secrets/nais.io/vault
   ingresses:
   {{#each ingress as |url|}}
      - {{url}}
