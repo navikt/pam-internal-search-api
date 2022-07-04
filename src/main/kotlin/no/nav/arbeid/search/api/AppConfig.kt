@@ -2,6 +2,7 @@ package no.nav.arbeid.search.api
 
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
+import jakarta.inject.Singleton
 import org.apache.http.HttpHost
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
@@ -12,7 +13,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder
 import java.net.URL
-import javax.inject.Singleton
+
 
 @Factory
 class AppConfig()  {

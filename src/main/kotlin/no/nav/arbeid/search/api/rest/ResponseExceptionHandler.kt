@@ -9,7 +9,7 @@ import io.micronaut.http.server.exceptions.ExceptionHandler
 import org.apache.http.entity.ContentType
 import org.apache.http.util.EntityUtils
 import org.elasticsearch.client.ResponseException
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @Produces
 @Singleton

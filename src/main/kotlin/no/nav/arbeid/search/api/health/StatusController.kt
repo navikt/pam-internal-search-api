@@ -3,10 +3,10 @@ package no.nav.arbeid.search.api.health
 import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import jakarta.inject.Inject
 import no.nav.arbeid.search.api.INTERNALAD
 import no.nav.arbeid.search.api.SearchService
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 
 @Controller

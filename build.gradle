@@ -1,8 +1,8 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.50"
-    id "org.jetbrains.kotlin.kapt" version "1.3.50"
-    id "org.jetbrains.kotlin.plugin.allopen" version "1.3.50"
-    id "com.github.johnrengelman.shadow" version "5.0.0"
+    id "org.jetbrains.kotlin.jvm" version "$kotlinVersion"
+    id "org.jetbrains.kotlin.kapt" version "$kotlinVersion"
+    id "org.jetbrains.kotlin.plugin.allopen" version "$kotlinVersion"
+    id "com.github.johnrengelman.shadow" version "$shadowVersion"
     id "application"
 }
 
@@ -10,6 +10,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url "https://jcenter.bintray.com" }
+    maven { url "https://github-package-registry-mirror.gc.nav.no/cached/maven-release"}
 }
 
 dependencies {
@@ -25,12 +26,12 @@ dependencies {
     implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:7.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9"
-    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
-    runtimeOnly "net.logstash.logback:logstash-logback-encoder:6.2"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
+    implementation "ch.qos.logback:logback-classic:$logbackVersion"
+    implementation "net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion"
     testImplementation "org.assertj:assertj-core:3.11.1"
-    implementation "io.micronaut.configuration:micronaut-micrometer-core:$micronautMicrometerVersion"
-    implementation "io.micronaut.configuration:micronaut-micrometer-registry-prometheus:$micronautMicrometerVersion"
+    implementation "io.micronaut.micrometer:micronaut-micrometer-core:$micronautVersion"
+    implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus:$micronautVersion"
     implementation "io.micronaut:micronaut-management:$micronautVersion"
     kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
 }

@@ -1,6 +1,7 @@
 package no.nav.arbeid.search.api
 
 import io.micronaut.context.annotation.Value
+import jakarta.inject.Singleton
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.util.EntityUtils
@@ -9,7 +10,6 @@ import org.elasticsearch.client.RestClientBuilder
 import org.elasticsearch.client.RestHighLevelClient
 import org.slf4j.LoggerFactory
 import java.net.URL
-import javax.inject.Singleton
 
 @Singleton
 class SearchClient(
