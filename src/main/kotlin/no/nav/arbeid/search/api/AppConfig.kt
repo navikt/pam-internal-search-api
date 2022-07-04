@@ -12,17 +12,23 @@ import org.apache.http.impl.client.BasicCredentialsProvider
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder
+import org.slf4j.LoggerFactory
 import java.net.URL
 
 
 @Factory
 class AppConfig()  {
+    companion object{
+        private val LOG = LoggerFactory.getLogger(AppConfig::class.java)
+    }
 
     @Singleton
     fun safeElasticClientBuilder(@Value("\${elasticsearch.url}") elasticsearchUrl: URL? = null,
                                  @Value("\${elasticsearch.user:foo}") user: String,
                                  @Value("\${elasticsearch.password:bar}") password: String): RestClientBuilder {
+
         val credentialsProvider = BasicCredentialsProvider().apply {
+            LOG.info("Connecting opensearch using $elasticsearchUrl and user $user")
             setCredentials(AuthScope.ANY, UsernamePasswordCredentials(user, password))
         }
 
