@@ -5,13 +5,15 @@ import io.micronaut.http.HttpHeaderValues.CACHE_MAX_AGE
 import io.micronaut.http.HttpHeaderValues.CACHE_PUBLIC
 import io.micronaut.http.HttpHeaders.CACHE_CONTROL
 import io.micronaut.http.annotation.*
-import no.nav.arbeid.search.api.INTERNALAD
-import no.nav.arbeid.search.api.LookupService
-import no.nav.arbeid.search.api.SearchService
-import no.nav.arbeid.search.api.UNDERENHET
+import no.nav.arbeid.search.api.*
+import org.slf4j.LoggerFactory
 
 @Controller
 class SearchController constructor(private val searchService: SearchService, private val lookupService: LookupService) {
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(SearchController::class.java)
+    }
 
     @Post(uris = ["/internalad/_search", "/eures/internalad/_search"])
     fun searchAdWithBody(params: HttpParameters, @Body body: String) = searchService.searchWithBody(INTERNALAD,params.asMap(), body)
@@ -37,7 +39,7 @@ class SearchController constructor(private val searchService: SearchService, pri
         "/stillingsok/ad/{uuid}", "/stillingsok/ad/{uuid}/_source"])
     fun lookupAd(@PathVariable("uuid") uuid: String,
                  request: HttpRequest<*>): HttpResponse<String> {
-
+        LOG.info("Validerer $uuid for søk etter ad")
         uuid.validateUuid()
 
         val onlySource = request.path.endsWith("/_source")

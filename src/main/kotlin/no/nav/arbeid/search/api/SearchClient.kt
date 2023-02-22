@@ -53,6 +53,7 @@ class SearchClient(
     }
 
     fun lookup(documentId: String, onlySource: Boolean, params: Map<String, MutableList<String>>): String {
+        LOG.info("Søker opp ad med uuid: $documentId")
         val request = Request("GET", "/$INTERNALAD/_doc/$documentId" + if (onlySource) "/_source" else "")
         params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
         val responseEntity = lowLevelClient.performRequest(request).entity
