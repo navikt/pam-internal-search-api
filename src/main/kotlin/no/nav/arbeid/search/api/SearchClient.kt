@@ -19,6 +19,7 @@ class SearchClient(
 
 
     fun searchWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
+        LOG.info("Searching with body - index: $index - params: $params - body: $body")
         val request = Request("POST", "/$index/_search")
         return requestWithBody(request, params, body)
     }
@@ -31,6 +32,7 @@ class SearchClient(
     }
 
     fun countWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
+        LOG.info("Counting with body - index: $index - params: $params - body: $body")
         val request = Request("POST", "/$index/_count")
         return requestWithBody(request, params, body)
     }
