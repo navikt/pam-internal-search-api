@@ -44,3 +44,4 @@ spec:
         - application: pam-eures-stilling-eksport
         - application: arbeidsplassen-janzztest
         - application: pam-ad
+        - application: pam-nss-admin
