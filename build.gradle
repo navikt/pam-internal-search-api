@@ -23,7 +23,7 @@ dependencies {
     kapt "io.micronaut:micronaut-inject-java"
     kapt "io.micronaut:micronaut-validation"
     kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
-    implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:7.2.0"
+    implementation "org.opensearch.client:opensearch-rest-high-level-client:2.11.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"

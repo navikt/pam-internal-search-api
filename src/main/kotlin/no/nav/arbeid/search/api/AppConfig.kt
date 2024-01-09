@@ -10,8 +10,8 @@ import org.apache.http.client.config.RequestConfig
 import org.apache.http.conn.ssl.DefaultHostnameVerifier
 import org.apache.http.impl.client.BasicCredentialsProvider
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
-import org.elasticsearch.client.RestClient
-import org.elasticsearch.client.RestClientBuilder
+import org.opensearch.client.RestClient
+import org.opensearch.client.RestClientBuilder
 import org.slf4j.LoggerFactory
 import java.net.URL
 
