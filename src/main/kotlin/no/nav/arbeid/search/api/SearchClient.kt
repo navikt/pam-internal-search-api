@@ -5,16 +5,16 @@ import jakarta.inject.Singleton
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.util.EntityUtils
-import org.elasticsearch.client.Request
-import org.elasticsearch.client.RestClientBuilder
-import org.elasticsearch.client.RestHighLevelClient
+import org.opensearch.client.Request
+import org.opensearch.client.RestClientBuilder
+import org.opensearch.client.RestHighLevelClient
 import org.slf4j.LoggerFactory
 import java.net.URL
 
 @Singleton
 class SearchClient(
-        client: RestClientBuilder,
-        @Value("\${elasticsearch.url}") private val elasticsearchUrl: URL? = null
+    client: RestClientBuilder,
+    @Value("\${elasticsearch.url}") private val elasticsearchUrl: URL? = null
 ) : RestHighLevelClient(client) {
 
 
