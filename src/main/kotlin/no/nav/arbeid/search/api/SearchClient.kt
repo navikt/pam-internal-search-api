@@ -53,14 +53,20 @@ class SearchClient(
     }
 
     fun lookup(documentId: String, onlySource: Boolean, params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$INTERNALAD/_doc/$documentId" + if (onlySource) "/_source" else "")
+        val request = Request("GET", "/$INTERNALAD/_doc/$documentId" + if (onlySource) "?filter_path=_source" else "")
         params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
         val responseEntity = lowLevelClient.performRequest(request).entity
-        return EntityUtils.toString(responseEntity)
+        val responseString = EntityUtils.toString(responseEntity)
+        return if (onlySource) responseString.extractSource() else responseString
     }
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SearchClient::class.java)
+        fun String.extractSource(): String {
+            val resp = this.replaceFirst("{", "").replaceFirst("\"_source\":", "")
+            val lastBracketCloseIndex = resp.lastIndexOf("}")
+            return resp.substring(0, lastBracketCloseIndex).trim().trimIndent()
+        }
     }
 
     init {
