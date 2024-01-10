@@ -34,6 +34,9 @@ dependencies {
     implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus:$micronautVersion"
     implementation "io.micronaut:micronaut-management:$micronautVersion"
     kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
+
+    testImplementation "org.testcontainers:junit-jupiter:1.19.3"
+    testImplementation "org.assertj:assertj-core:3.24.2"
 }
 
 group = "no.nav.arbeid.internal-search-api"
