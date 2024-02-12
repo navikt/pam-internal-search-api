@@ -28,6 +28,11 @@ spec:
     requests:
       cpu: 500m
       memory: 200Mi
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
   webproxy: false
   vault:
     enabled: false
