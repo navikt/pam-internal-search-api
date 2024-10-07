@@ -41,13 +41,13 @@ dependencies {
 
 group = "no.nav.arbeid.internal-search-api"
 version = "0.1"
-sourceCompatibility = "12"
+sourceCompatibility = "17"
 
 application { mainClassName = "no.nav.arbeid.search.api.Application" }
 
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
         //Will retain parameter names for Java reflection
         javaParameters = true
     }
@@ -55,7 +55,7 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
         javaParameters = true
     }
 }
