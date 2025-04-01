@@ -9,7 +9,6 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://jcenter.bintray.com" }
     maven { url "https://github-package-registry-mirror.gc.nav.no/cached/maven-release"}
 }
 
@@ -23,7 +22,7 @@ dependencies {
     kapt "io.micronaut:micronaut-inject-java"
     kapt "io.micronaut:micronaut-validation"
     kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
-    implementation "org.opensearch.client:opensearch-rest-high-level-client:2.11.1"
+    implementation "org.opensearch.client:opensearch-rest-high-level-client:2.19.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
@@ -35,28 +34,18 @@ dependencies {
     implementation "io.micronaut:micronaut-management:$micronautVersion"
     kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
 
-    testImplementation "org.testcontainers:junit-jupiter:1.19.3"
-    testImplementation "org.assertj:assertj-core:3.24.2"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.6"
+    testImplementation "org.assertj:assertj-core:3.27.3"
 }
 
 group = "no.nav.arbeid.internal-search-api"
 version = "0.1"
-sourceCompatibility = "17"
 
 application { mainClassName = "no.nav.arbeid.search.api.Application" }
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "17"
-        //Will retain parameter names for Java reflection
-        javaParameters = true
-    }
-}
-
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "17"
-        javaParameters = true
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
