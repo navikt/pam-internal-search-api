@@ -28,14 +28,14 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
     implementation "ch.qos.logback:logback-classic:$logbackVersion"
     implementation "net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion"
-    testImplementation "org.assertj:assertj-core:3.11.1"
+    testImplementation "org.assertj:assertj-core:3.27.7"
     implementation "io.micronaut.micrometer:micronaut-micrometer-core:$micronautVersion"
     implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus:$micronautVersion"
     implementation "io.micronaut:micronaut-management:$micronautVersion"
     kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
 
     testImplementation "org.testcontainers:junit-jupiter:1.20.6"
-    testImplementation "org.assertj:assertj-core:3.27.3"
+    testImplementation "org.assertj:assertj-core:3.27.7"
 }
 
 group = "no.nav.arbeid.internal-search-api"
