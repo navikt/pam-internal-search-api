@@ -11,7 +11,7 @@ on:
       - feature/*
 jobs:
   call-workflow:
-    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v7
+    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v9
     permissions:
       actions: read
       contents: write
@@ -19,7 +19,7 @@ jobs:
       security-events: write
     with:
       NAIS_RESOURCE: naiserator.yml
-      JAVA_VERSION: 17
+      JAVA_VERSION: 21
       # JAVA_DISTRIBUTION: zulu
       SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'master' }}
     secrets:
