@@ -1,26 +1,22 @@
-# pam-search-api
+# pam-internal-search-api
 
-## Read-only gateway/API mot ElasticSearch
+Read-only gateway/API mot OpenSearch for interne stillingsannonser.
 
-### Kjøre fra localhost
+## Kjøre lokalt
 
-#### IntelliJ
+Krever en OpenSearch-instans. Sett miljøvariabler og kjør jar-en:
 
-Lag maven configuration mot app-mappen, og sett 
+```bash
+./gradlew build
+```
+```bash
+OPEN_SEARCH_URI=http://localhost:9200 \
+OPEN_SEARCH_USERNAME=admin \
+OPEN_SEARCH_PASSWORD=admin \
+java -jar build/libs/pam-internal-search-api-0.1-all.jar
+```
 
-command line:
-
-    spring-boot:run -Dspring.profiles.active=dev 
-
-Working directory: app/
-
-Du får da instillingene fra application-dev.yml under app/src/test/resources, 
-og kan gjøre tilpasninger der.
-
-Alternativt, kjør klassen `DevApplication` som en Spring boot app fra IntelliJ.
-
-#### Maven
-
-Gå til app-mappen og kjør:
-
-    mvn spring-boot:run -Dspring.profiles.active=dev
+## Tester
+```bash
+./gradlew test
+```

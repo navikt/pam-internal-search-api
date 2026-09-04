@@ -19,7 +19,7 @@ jobs:
       security-events: write
     with:
       NAIS_RESOURCE: naiserator.yml
-      JAVA_VERSION: 21
+      JAVA_VERSION: 25
       # JAVA_DISTRIBUTION: zulu
       SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'master' }}
     secrets:
