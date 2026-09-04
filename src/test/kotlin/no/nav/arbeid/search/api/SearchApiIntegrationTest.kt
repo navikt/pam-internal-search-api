@@ -2,12 +2,14 @@ package no.nav.arbeid.search.api
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.sun.net.httpserver.HttpServer
 import io.javalin.testtools.HttpClient
 import io.javalin.testtools.JavalinTest
 import io.javalin.testtools.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import java.net.InetSocketAddress
 
 class SearchApiIntegrationTest {
 
@@ -118,17 +120,31 @@ class SearchApiIntegrationTest {
     }
 
     @Test
-    fun `opensearch auth rejection forwards the status instead of 502`() {
-        val badCredentials = SearchClient(
-            openSearchTransport(OpenSearchTestInstance.config.copy(openSearchPassword = "feil-passord"))
+    fun `opensearch rejection forwards the status instead of 502`() {
+        // The transport wraps 401/403 in a plain IOException, hiding the status from the exception
+        // type, so verify against a stub that rejects the way the OpenSearch proxy does.
+        val opensearch = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
+            createContext("/") { exchange ->
+                exchange.sendResponseHeaders(403, -1)
+                exchange.close()
+            }
+            start()
+        }
+        val rejectedClient = SearchClient(
+            openSearchTransport(AppConfig(openSearchUri = "http://127.0.0.1:${opensearch.address.port}"))
         )
 
         lateinit var response: Response
-        JavalinTest.test(createApp(badCredentials, prometheusRegistry())) { _, client ->
-            response = client.post("/internalad/_search", MATCH_ALL)
+        try {
+            JavalinTest.test(createApp(rejectedClient, prometheusRegistry())) { _, client ->
+                response = client.post("/internalad/_search", MATCH_ALL)
+            }
+        } finally {
+            rejectedClient.close()
+            opensearch.stop(0)
         }
 
-        assertThat(response.code).isEqualTo(401)
+        assertThat(response.code).isEqualTo(403)
     }
 
     @Test
