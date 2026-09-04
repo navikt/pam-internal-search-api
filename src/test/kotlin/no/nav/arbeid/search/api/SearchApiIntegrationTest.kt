@@ -118,6 +118,20 @@ class SearchApiIntegrationTest {
     }
 
     @Test
+    fun `opensearch auth rejection forwards the status instead of 502`() {
+        val badCredentials = SearchClient(
+            openSearchTransport(OpenSearchTestInstance.config.copy(openSearchPassword = "feil-passord"))
+        )
+
+        lateinit var response: Response
+        JavalinTest.test(createApp(badCredentials, prometheusRegistry())) { _, client ->
+            response = client.post("/internalad/_search", MATCH_ALL)
+        }
+
+        assertThat(response.code).isEqualTo(401)
+    }
+
+    @Test
     fun `prometheus endpoint exposes metrics`() {
         assertThat(get("/prometheus").body.string()).contains("jvm_memory_used_bytes")
     }
