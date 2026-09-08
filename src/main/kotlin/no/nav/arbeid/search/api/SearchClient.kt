@@ -1,78 +1,80 @@
 package no.nav.arbeid.search.api
 
-import io.micronaut.context.annotation.Value
-import jakarta.inject.Singleton
-import org.apache.http.entity.ContentType
-import org.apache.http.entity.StringEntity
-import org.apache.http.util.EntityUtils
-import org.opensearch.client.Request
-import org.opensearch.client.RestClientBuilder
-import org.opensearch.client.RestHighLevelClient
-import org.slf4j.LoggerFactory
-import java.net.URL
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.opensearch.client.opensearch.generic.OpenSearchGenericClient
+import org.opensearch.client.opensearch.generic.Request
+import org.opensearch.client.opensearch.generic.Requests
+import org.opensearch.client.transport.OpenSearchTransport
+import java.io.Closeable
+import java.io.IOException
 
-@Singleton
-class SearchClient(
-    client: RestClientBuilder,
-    @Value("\${elasticsearch.url}") private val elasticsearchUrl: URL? = null
-) : RestHighLevelClient(client) {
+const val INTERNALAD = "internalad"
+const val UNDERENHET = "underenhet"
 
+/** Params a client is allowed to pass to document lookup. Anything else is rejected. */
+private val ALLOWED_LOOKUP_PARAMS = setOf(
+    "_source",
+    "_source_include",
+    "_source_exclude",
+    "_source_includes",
+    "_source_excludes",
+    "filter_path",
+    "typed_keys",
+    "ignore_unavailable",
+    "expand_wildcards",
+    "allow_no_indices",
+    "ignore_throttled",
+    "search_type",
+    "batched_reduce_size",
+    "ccs_minimize_roundtrips"
+)
 
-    fun searchWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
-        val request = Request("POST", "/$index/_search")
-        return requestWithBody(request, params, body)
+class SearchClient(private val transport: OpenSearchTransport) : Closeable {
+
+    private val genericClient =
+        OpenSearchGenericClient(transport, null, OpenSearchGenericClient.ClientOptions.throwOnHttpErrors())
+
+    private val mapper = ObjectMapper()
+
+    fun searchWithBody(index: String, params: Map<String, List<String>>, body: String): String =
+        execute("POST", "/$index/_search", params, body)
+
+    fun countWithBody(index: String, params: Map<String, List<String>>, body: String): String =
+        execute("POST", "/$index/_count", params, body)
+
+    fun searchWithQuery(index: String, params: Map<String, List<String>>): String =
+        execute("GET", "/$index/_search", params)
+
+    fun countWithQuery(index: String, params: Map<String, List<String>>): String =
+        execute("GET", "/$index/_count", params)
+
+    fun lookup(documentId: String, onlySource: Boolean, params: Map<String, List<String>>): String {
+        require(ALLOWED_LOOKUP_PARAMS.containsAll(params.keys)) { "Disallowed request params present in ${params.keys}" }
+
+        val query = if (onlySource) params + ("filter_path" to listOf("_source")) else params
+        val response = execute("GET", "/$INTERNALAD/_doc/$documentId", query)
+
+        return if (onlySource) response.extractSource() else response
     }
 
-    fun requestWithBody(request: Request, params: Map<String, MutableList<String>>, body: String?): String {
-        params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
-        request.entity = StringEntity(body, ContentType.APPLICATION_JSON)
-        val responseEntity = lowLevelClient.performRequest(request).entity
-        return EntityUtils.toString(responseEntity)
-    }
+    /** Unwraps `{"_source": {...}}` so a lookup with `/_source` returns the document itself. */
+    private fun String.extractSource(): String = mapper.readTree(this).path("_source").toString()
 
-    fun countWithBody(index: String, params: Map<String, MutableList<String>>, body: String?): String {
-        val request = Request("POST", "/$index/_count")
-        return requestWithBody(request, params, body)
-    }
+    private fun execute(method: String, endpoint: String, params: Map<String, List<String>>, body: String? = null) =
+        execute(
+            Requests.builder()
+                .endpoint(endpoint)
+                .method(method)
+                .query(params.mapValues { (_, values) -> values.joinToString(" ") })
+                .apply { body?.let { json(it) } }
+                .build()
+        )
 
-    fun searchWithQuery(index: String, params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$index/_search")
-        return reuqestWithQuery(request, params)
-    }
-
-    private fun reuqestWithQuery(request: Request, params: Map<String, MutableList<String>>) : String {
-        params.forEach { (name, value) ->
-            request.addParameter(name, value.joinToString(" ")) }
-        val responseEntity = lowLevelClient.performRequest(request).entity
-        return EntityUtils.toString(responseEntity)
-    }
-
-    fun countWithQuery(index: String, params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$index/_count")
-        return reuqestWithQuery(request, params)
-    }
-
-    fun lookup(documentId: String, onlySource: Boolean, params: Map<String, MutableList<String>>): String {
-        val request = Request("GET", "/$INTERNALAD/_doc/$documentId" + if (onlySource) "?filter_path=_source" else "")
-        params.forEach { (name, value) -> request.addParameter(name, value.joinToString(" ")) }
-        val responseEntity = lowLevelClient.performRequest(request).entity
-        val responseString = EntityUtils.toString(responseEntity)
-        return if (onlySource) responseString.extractSource() else responseString
-    }
-
-    companion object {
-        private val LOG = LoggerFactory.getLogger(SearchClient::class.java)
-        fun String.extractSource(): String {
-            val resp = this.replaceFirst("{", "").replaceFirst("\"_source\":", "")
-            val lastBracketCloseIndex = resp.lastIndexOf("}")
-            return resp.substring(0, lastBracketCloseIndex).trim().trimIndent()
+    private fun execute(request: Request): String =
+        genericClient.execute(request).use { response ->
+            response.body.orElseThrow { IOException("Empty response body from OpenSearch") }
+                .use { it.bodyAsString() }
         }
-    }
 
-    init {
-        LOG.info("Using Elasticsearch at {}", elasticsearchUrl)
-    }
+    override fun close() = transport.close()
 }
-
-val INTERNALAD = "internalad"
-val UNDERENHET = "underenhet"

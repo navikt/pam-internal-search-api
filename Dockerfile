@@ -1,8 +1,9 @@
-FROM gcr.io/distroless/java21
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-25
 
 COPY build/libs/pam-internal-search-api-*-all.jar /app/app.jar
-ENV JAVA_OPTS="-Xms768m -Xmx1024m"
+
+ENV JDK_JAVA_OPTIONS="-XX:InitialRAMPercentage=25 -XX:MaxRAMPercentage=70 -XX:+ExitOnOutOfMemoryError"
 ENV LANG='nb_NO.UTF-8' LANGUAGE='nb_NO:nb' LC_ALL='nb:NO.UTF-8' TZ="Europe/Oslo"
 EXPOSE 9027
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+CMD ["-jar", "/app/app.jar"]
