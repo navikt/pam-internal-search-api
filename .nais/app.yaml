@@ -1,12 +1,11 @@
-apiVersion: "nais.io/v1alpha1"
-kind: "Application"
+apiVersion: nais.io/v1alpha1
+kind: Application
 metadata:
   name: pam-internal-search-api
   namespace: teampam
   labels:
     team: teampam
 spec:
-  image: {{ image }}
   port: 9027
   replicas:
     min: 2
@@ -39,10 +38,6 @@ spec:
   webproxy: false
   vault:
     enabled: false
-  ingresses:
-  {{#each ingress as |url|}}
-     - {{url}}
-  {{/each}}
   openSearch:
     access: read
     instance: intern
