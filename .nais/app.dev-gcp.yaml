@@ -1,0 +1,3 @@
+spec:
+  ingresses:
+    - https://pam-internal-search-api.intern.dev.nav.no
