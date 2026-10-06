@@ -6,7 +6,7 @@ import org.opensearch.testcontainers.OpenSearchContainer
 import org.testcontainers.utility.DockerImageName
 
 // Bruk samme versjon som i dev og prod.
-private const val OPENSEARCH_IMAGE = "opensearchproject/opensearch:2.19.5"
+private const val OPENSEARCH_IMAGE = "opensearchproject/opensearch:3.6.0"
 
 object OpenSearchTestInstance {
 
