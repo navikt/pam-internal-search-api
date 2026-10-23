@@ -14,11 +14,16 @@ spec:
   prometheus:
     enabled: true
     path: /prometheus
+  startup:
+    path: /isAlive
+    initialDelay: 0
+    periodSeconds: 1
+    failureThreshold: 60
   liveness:
-    initialDelay: 5
+    initialDelay: 0
     path: /isAlive
   readiness:
-    initialDelay: 5
+    initialDelay: 0
     path: /isReady
   resources:
     limits:
