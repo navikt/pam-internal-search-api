@@ -13,8 +13,8 @@ repositories {
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
-val javalinVersion = "7.2.3"
-val micrometerVersion = "1.17.1"
+val javalinVersion = "7.2.4"
+val micrometerVersion = "1.17.2"
 val opensearchVersion = "3.10.0"
 val logbackEncoderVersion = "9.0"
 val junitVersion = "6.1.3"
