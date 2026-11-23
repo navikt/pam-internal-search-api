@@ -15,7 +15,7 @@ repositories {
 
 val javalinVersion = "7.2.4"
 val micrometerVersion = "1.17.2"
-val opensearchVersion = "3.10.0"
+val opensearchVersion = "3.11.0"
 val logbackEncoderVersion = "9.0"
 val junitVersion = "6.1.3"
 val assertjVersion = "3.27.7"
